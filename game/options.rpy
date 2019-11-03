@@ -11,18 +11,20 @@ define config.name = _("Rievegh")
 ## Determines if the title given above is shown on the main menu screen. Set
 ## this to False to hide the title.
 
-define gui.show_name = True
+define gui.show_name = False
 
 
 ## The version of the game.
 
-define config.version = "1.0"
+define config.version = "0.0.1b"
 
 
 ## Text that is placed on the game's about screen. Place the text between the
 ## triple-quotes, and leave a blank line between paragraphs.
 
 define gui.about = _p("""
+This is a template visual novel to showcase certain
+modifications to the Ren'Py engine.
 """)
 
 
@@ -65,8 +67,8 @@ define config.has_voice = True
 
 ## Entering or exiting the game menu.
 
-define config.enter_transition = dissolve
-define config.exit_transition = dissolve
+define config.enter_transition = fade
+define config.exit_transition = fade
 
 
 ## Between screens of the game menu.
@@ -76,12 +78,12 @@ define config.intra_transition = dissolve
 
 ## A transition that is used after a game has been loaded.
 
-define config.after_load_transition = None
+define config.after_load_transition = fade
 
 
 ## Used when entering the main menu after the game has ended.
 
-define config.end_game_transition = None
+define config.end_game_transition = fade
 
 
 ## A variable to set the transition used when the game starts does not exist.
@@ -144,13 +146,40 @@ define config.save_directory = "rievegh-system"
 
 define config.window_icon = "gui/window_icon.png"
 
-## Camera configuration ########################################################
-define config.layers = ['master', 'background', 'middle', 'forward', 'transient', 'screens', 'overlay']
+## Camera/L2D configuration ####################################################
+define config.layers = [
+    'master', 'background',
+    'middle', 'forward',
+    'transient', 'screens',
+    'overlay'
+]
 
-# SHIFT + P
-define config.developer = False
+# SHIFT + P for GUI coordinate viewer
+define config.developer = True
 
 init python:
+    from live2d.displayable import Live2DDisplayable
+    from renpy.loader import transfn
+
+    class L2D(object):
+        def __init__(self, img_id):
+            super(L2D, self).__init__()
+            self.model = None
+            self.sprite = Live2DDisplayable()
+            renpy.image(img_id, self.sprite)
+
+        def load(self, model, fprefix):
+            self.model = self.sprite.scene.create_model(
+                transfn(u'models/' + model + u'/'),
+                fprefix + u'.model3.json'
+            )
+
+        def __del__(self):
+            # Don't leak memory or sprites will duplicate!
+            if (self.model is not None):
+                self.sprite.scene.release_model(self.model)
+                self.model = None
+
     register_3d_layer('background', 'middle', 'forward')
 
 ## Build configuration #########################################################
