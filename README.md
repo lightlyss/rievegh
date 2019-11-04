@@ -13,7 +13,7 @@ be a better choice to swap to Unity.
 
 ## Development
 Tested on `Ren'Py 7.3.0.271` under Windows 7. Camera should work fine everywhere.
-Live2D may work on OSX. See `game/script-*.rpy` for examples. You can run `make clean`
+Live2D may work on OSX. See `game/script_*.rpy` for examples. You can run `make clean`
 to remove cached files during development but you probably won't need to.
 
 ## Disclaimer
