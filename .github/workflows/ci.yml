@@ -1,0 +1,35 @@
+name: build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: macOS-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Python 2
+      uses: actions/setup-python@v1
+      with:
+        python-version: 2.7.16
+        architecture: x64
+    - name: Install Ren'Py
+      run: |
+        cd ..
+        wget https://www.renpy.org/dl/7.3.0/renpy-7.3.0-sdk.tar.bz2
+        tar xf renpy-7.3.0-sdk.tar.bz2
+        mv renpy-7.3.0-sdk renpy
+        cd rievegh
+    - name: Lint scripts
+      run: |
+        cd ../renpy
+        ./renpy.sh "../rievegh/" lint
+        cd ../rievegh
+      env:
+        SDL_AUDIODRIVER: dummy
+    - name: Build game
+      run: |
+        cd ../renpy
+        ./renpy.sh launcher distribute "../rievegh/"
+        cd ../rievegh
+      env:
+        SDL_AUDIODRIVER: dummy

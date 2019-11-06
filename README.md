@@ -1,3 +1,4 @@
+[![Build Status](https://github.com/lightlyss/rievegh/workflows/build/badge.svg)](https://github.com/lightlyss/rievegh)
 # Rievegh
 > Alissyn Rievegh was the author of a well-known children's novel in Sanne-Ajrizda...
 
